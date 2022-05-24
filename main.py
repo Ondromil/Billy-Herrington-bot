@@ -1,12 +1,37 @@
-
+import os
 import discord
+from discord.ext.commands import Bot
 from discord.ext import commands
-from sys import prefix
+import random
 
 client = discord.Client()
-bot = commands.Bot(command_prefix="!")
+
+words = ["♂️AH YES SIR♂️", "♂️FUCKING SLAVES GET YOUR ASS BACK HERE♂️", "♂️AAAAAAAAAAAAAAAAAAAH♂️", "♂️THANK YOU SIR♂️", "♂️LUKÁŠ JE PEDOFILNÍ WEEB♂️", "♂️OH MY SHOULDER♂️"]
 
 @client.event
 async def on_ready():
-    print("hello")
+    print("Logged as {0.user}".format(client))
+
+@client.event
+async def on_message(message):
+    if message.author == client.user:
+        return
+    if message.content.startswith("!billy"):
+        while True:
+            await message.channel.send(words[random.randint(0, 5)])
+            if message.content.startswith("stop"):
+               break
+    if message.content.startswith("!wilson"):
+         while True:
+            await message.channel.send(":wilson:")
+            if message.content.startswith("stop"):
+               break
+    if message.content.startswith("!penis"):
+         await message.channel.send("8======D")  
+
+with open('Discord-bot\Token.txt') as f:
+    Token = f.readline()
+         
+client.run(Token)
+
 
