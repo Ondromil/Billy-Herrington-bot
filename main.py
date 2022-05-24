@@ -19,13 +19,9 @@ async def on_message(message):
     if message.content.startswith("!billy"):
         while True:
             await message.channel.send(words[random.randint(0, 5)])
-            if message.content.startswith("stop"):
-               break
     if message.content.startswith("!wilson"):
          while True:
             await message.channel.send(":wilson:")
-            if message.content.startswith("stop"):
-               break
     if message.content.startswith("!penis"):
          await message.channel.send("8======D")  
 
