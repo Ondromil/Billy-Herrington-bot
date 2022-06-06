@@ -24,6 +24,9 @@ async def on_message(message):
             await message.channel.send(":wilson:")
     if message.content.startswith("!penis"):
          await message.channel.send("8======D")  
+    if message.content.startswith("heil"):
+        while True:
+            await message.channel.send("<:gachiHYPER:778672780773818389> ♂️ VŠECHNO NEJLEPŠÍ ONDŘEJI ♂️ <:gachiHYPER:778672780773818389>")
 
 with open('Discord-bot\Token.txt') as f:
     Token = f.readline()
