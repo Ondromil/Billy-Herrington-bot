@@ -27,7 +27,7 @@ async def on_message(message):
     if message.content.startswith("xd"):
         await message.channel.send("xd")
 
-with open('Discord-bot\Token.env') as f:
+with open('Discord-bot\.env') as f:
     Token = f.readline()
 
 client.run(Token)
