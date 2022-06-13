@@ -47,6 +47,4 @@ async def enter(ctx):
 with open('Discord-bot\.env') as f:
     Token = f.readline()
 
-cock = "c"
-
 bot.run(Token)
