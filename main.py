@@ -35,10 +35,16 @@ async def help(ctx):
     helpEmbed.add_field(name=".billy", value="Start Gachi Muchi rave", inline=False)
     helpEmbed.add_field(name=".enter", value="Enter the Lockerooms", inline=False)
     helpEmbed.add_field(name=".wrestle", value="Start wrestling (minigame)", inline=False)
+    helpEmbed.add_field(name=".ping", value="Shows bot's latency", inline=False)
     await ctx.send(embed=helpEmbed)
 
 @bot.command()
+async def ping(ctx):
+    await ctx.send("Pong! :ping_pong:   {0} ms".format(round(bot.latency * 1000)))
+
+@bot.command()
 async def billy(ctx):
+    global words
     words = ["♂️AH YES SIR♂️", "♂️FUCKING SLAVES GET YOUR ASS BACK HERE♂️", "♂️AAAAAAAAAAAAAAAAAAAH♂️", "♂️THANK YOU SIR♂️", "♂️LUKÁŠ JE PEDOFILNÍ WEEB♂️", "♂️OH MY SHOULDER♂️"]
     for i in range(0, 50):
          await ctx.send(words[random.randint(0, 5)])
@@ -50,15 +56,18 @@ async def enter(ctx):
 isFighting = False
 @bot.command()
 async def wrestle(ctx):
-    global playerHealth
-    playerHealth = 100
-    global enemyHealth
-    enemyHealth = 100 
     global isFighting
-    isFighting = True
-    embeds()
-    await ctx.send(embed=fightEmbed)
-    await ctx.send(embed=selectionEmbed)
+    if isFighting == False:
+        global playerHealth
+        playerHealth = 100
+        global enemyHealth
+        enemyHealth = 100 
+        isFighting = True
+        embeds()
+        await ctx.send(embed=fightEmbed)
+        await ctx.send(embed=selectionEmbed)
+    else:
+        await ctx.send("You are already wrestling")
 
 @bot.command()
 async def a(ctx):
@@ -69,20 +78,20 @@ async def a(ctx):
         damageDoneToEnemy = random.randrange(5, 15)
         damageDoneToPlayer = random.randrange(5, 15)
         enemyHealth -= damageDoneToEnemy
+        await ctx.send(random.choice(words))
         await ctx.send("You did {0} damage".format(damageDoneToEnemy))
         if (enemyHealth <= 0):
             await ctx.send("You won! :partying_face:")
             isFighting = False
         else:
             playerHealth -= damageDoneToPlayer
-            await ctx.send("You have received {0} damage".format(damageDoneToPlayer))
+            await ctx.send("You took {0} damage".format(damageDoneToPlayer))
         if (playerHealth <= 0):
             await ctx.send("You lost! :cry:")
             isFighting = False
         if isFighting == True:
             embeds()
             await ctx.send(embed=fightEmbed)         
-            await ctx.send(embed=selectionEmbed)
     else:
         await ctx.send("You are not wrestling")
 
@@ -95,16 +104,16 @@ async def h(ctx):
         healthHealed = random.randrange(5, 15)
         damageDoneToPlayer = random.randrange(5, 15)
         playerHealth += healthHealed
+        await ctx.send(random.choice(words))
         await ctx.send("You have healed {0} health".format(healthHealed))
         playerHealth -= damageDoneToPlayer
-        await ctx.send("You have received {0} damage".format(damageDoneToPlayer))
+        await ctx.send("You took {0} damage".format(damageDoneToPlayer))
         if (playerHealth <= 0):
             await ctx.send("You lost! :cry:")
             isFighting = False
         if isFighting == True:
             embeds()
             await ctx.send(embed=fightEmbed)         
-            await ctx.send(embed=selectionEmbed)
     else:
         await ctx.send("You are not wrestling")
 
@@ -116,17 +125,25 @@ async def s(ctx):
         isFighting = False
     else:
         await ctx.send("You are not even fighting and already want to surrender, fucking frenchie")
-    
+
+@bot.command()
+async def t(ctx):
+    embeds()
+    await ctx.send(embed=selectionEmbed)
+ 
+words = ["♂️AH YES SIR♂️", "♂️FUCKING SLAVES GET YOUR ASS BACK HERE♂️", "♂️AAAAAAAAAAAAAAAAAAAH♂️", "♂️THANK YOU SIR♂️", "♂️LUKÁŠ JE PEDOFILNÍ WEEB♂️", "♂️OH MY SHOULDER♂️"]   
+
 def embeds():
      global fightEmbed
      global selectionEmbed
      fightEmbed = EmbedBuilder(title="Battle", description="---------------------").build()
      fightEmbed.add_field(name="Billy Herrington",value="Health: {0}".format(enemyHealth), inline=False)
      fightEmbed.add_field(name="Van Darkholme (You)", value="Health: {0}".format(playerHealth), inline=False)
-     selectionEmbed = EmbedBuilder(title="Selection", description="What do you wish to do?").build()
-     selectionEmbed.add_field(name=".a", value="Attack, deals between 0-15 damage", inline=False)
-     selectionEmbed.add_field(name=".h", value="Heal, heals between 0-15 hp", inline=False)
+     selectionEmbed = EmbedBuilder(title="Tutorial", description="Commands for wrestling minigame").build()
+     selectionEmbed.add_field(name=".a", value="Attack, deals between 5-15 damage", inline=False)
+     selectionEmbed.add_field(name=".h", value="Heal, heals between 5-15 hp", inline=False)
      selectionEmbed.add_field(name=".s", value="Surrender", inline=False)
+     selectionEmbed.add_field(name=".t", value="Diplay tutorial again", inline=False)
      
 with open('Discord-bot\.env') as f:
     Token = f.readline()
