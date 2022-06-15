@@ -5,7 +5,7 @@ from MaxEmbeds import EmbedBuilder
 import random
 
 bot = commands.Bot(command_prefix='.')
-bot.remove_command('help')
+bot.remove_command('help')                 # removes help base command, so it can be replaced by bots help command
 
 @bot.event
 async def on_ready():
@@ -31,8 +31,11 @@ async def on_member_remove(member):
 
 @bot.command()
 async def help(ctx):
-    embed = EmbedBuilder(title="Help", description="**.billy** - Start Gachi Muchi rave").build()
-    await ctx.send(embed=embed)
+    helpEmbed = EmbedBuilder(title="Help", description="Command menu").build()
+    helpEmbed.add_field(name=".billy", value="Start Gachi Muchi rave", inline=False)
+    helpEmbed.add_field(name=".enter", value="Enter the Lockerooms", inline=False)
+    helpEmbed.add_field(name=".wrestle", value="Start wrestling (minigame)", inline=False)
+    await ctx.send(embed=helpEmbed)
 
 @bot.command()
 async def billy(ctx):
@@ -44,6 +47,87 @@ async def billy(ctx):
 async def enter(ctx):
     await ctx.send("Hey buddy I think you got the wrong door, the leather club is two blocks down")
 
+isFighting = False
+@bot.command()
+async def wrestle(ctx):
+    global playerHealth
+    playerHealth = 100
+    global enemyHealth
+    enemyHealth = 100 
+    global isFighting
+    isFighting = True
+    embeds()
+    await ctx.send(embed=fightEmbed)
+    await ctx.send(embed=selectionEmbed)
+
+@bot.command()
+async def a(ctx):
+    global isFighting
+    if isFighting == True:
+        global enemyHealth
+        global playerHealth
+        damageDoneToEnemy = random.randrange(5, 15)
+        damageDoneToPlayer = random.randrange(5, 15)
+        enemyHealth -= damageDoneToEnemy
+        await ctx.send("You did {0} damage".format(damageDoneToEnemy))
+        if (enemyHealth <= 0):
+            await ctx.send("You won! :partying_face:")
+            isFighting = False
+        else:
+            playerHealth -= damageDoneToPlayer
+            await ctx.send("You have received {0} damage".format(damageDoneToPlayer))
+        if (playerHealth <= 0):
+            await ctx.send("You lost! :cry:")
+            isFighting = False
+        if isFighting == True:
+            embeds()
+            await ctx.send(embed=fightEmbed)         
+            await ctx.send(embed=selectionEmbed)
+    else:
+        await ctx.send("You are not wrestling")
+
+@bot.command()
+async def h(ctx):
+    global isFighting
+    if isFighting == True:
+        global playerHealth
+        global enemyHealth
+        healthHealed = random.randrange(5, 15)
+        damageDoneToPlayer = random.randrange(5, 15)
+        playerHealth += healthHealed
+        await ctx.send("You have healed {0} health".format(healthHealed))
+        playerHealth -= damageDoneToPlayer
+        await ctx.send("You have received {0} damage".format(damageDoneToPlayer))
+        if (playerHealth <= 0):
+            await ctx.send("You lost! :cry:")
+            isFighting = False
+        if isFighting == True:
+            embeds()
+            await ctx.send(embed=fightEmbed)         
+            await ctx.send(embed=selectionEmbed)
+    else:
+        await ctx.send("You are not wrestling")
+
+@bot.command()
+async def s(ctx):
+    global isFighting
+    if isFighting == True:
+        await ctx.send("You have surrendered :flag_fr:")
+        isFighting = False
+    else:
+        await ctx.send("You are not even fighting and already want to surrender, fucking frenchie")
+    
+def embeds():
+     global fightEmbed
+     global selectionEmbed
+     fightEmbed = EmbedBuilder(title="Battle", description="---------------------").build()
+     fightEmbed.add_field(name="Billy Herrington",value="Health: {0}".format(enemyHealth), inline=False)
+     fightEmbed.add_field(name="Van Darkholme (You)", value="Health: {0}".format(playerHealth), inline=False)
+     selectionEmbed = EmbedBuilder(title="Selection", description="What do you wish to do?").build()
+     selectionEmbed.add_field(name=".a", value="Attack, deals between 0-15 damage", inline=False)
+     selectionEmbed.add_field(name=".h", value="Heal, heals between 0-15 hp", inline=False)
+     selectionEmbed.add_field(name=".s", value="Surrender", inline=False)
+     
 with open('Discord-bot\.env') as f:
     Token = f.readline()
 
